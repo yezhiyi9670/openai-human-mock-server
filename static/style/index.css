@@ -1,0 +1,130 @@
+:root {
+  overflow: hidden;
+}
+body {
+  overflow: auto;
+}
+:root, body, #root {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+}
+#root {
+  overflow-y: auto;
+}
+
+:root {
+  background-color: var(--color-void);
+  color: var(--color-t0);
+  color-scheme: light dark;
+
+  font-family: sans-serif;
+}
+
+:root {
+  --color-void: #FFFFFF;
+  --color-t0: #000000;
+  
+  --color-t1: #6C6C6C;
+  --color-r0: #FFFFFF;
+  --color-cover: #00000066;
+  --color-separator: #BCBCBC;
+  --color-surface: #F0F0F0;
+  --color-ambient: #DADADA;
+  --color-primary: #0087D3;
+  --color-success: #1E7D16;
+  --color-emphasize: #D9052D;
+  --color-caution: #EE7200;
+  --color-caution-text: #C75E00;
+  --color-tertiary: #A043BA;
+  --color-outline: #d6b41b;
+
+  --dimen-tree-indent: 1.1em;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-void: #121212;
+    --color-t0: #FBFBFB;
+
+    --color-t1: #BCBCBC;
+    --color-r0: #121212;
+    --color-cover: #00000077;
+    --color-separator: #7C7C7C;
+    --color-surface: #272727;
+    --color-ambient: #474747;
+    --color-primary: #6AB0E7;
+    --color-success: #53D54B;
+    --color-emphasize: #F9626D;
+    --color-caution: #F88F4D;
+    --color-caution-text: #F88F4D;
+    --color-tertiary: #CA97DD;
+    --color-outline: #d6b41b;
+  }
+}
+
+.app {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+.requests-list {
+  border: 1px solid var(--color-separator);
+  height: 150px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+.request-item {
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  padding: 6px;
+}
+.request-item.active {
+  background: var(--color-primary);
+  color: var(--color-r0);
+}
+
+.object-listing-line::before {
+  display: inline-block;
+  width: var(--dimen-tree-indent);
+  content: '▶';
+  color: var(--color-t1);
+  margin-left: calc(-1 * var(--dimen-tree-indent));
+  transform: scale(.8);
+}
+.object-listing-line.expanded::before {
+  content: '▼';
+  transform: scale(.8) translateX(-.15em);
+}
+.object-listing-line.leaf::before {
+  content: '■';
+  transform: scale(.95) translateX(.1em);
+}
+.object-listing-line.expanded {
+  white-space: pre-wrap;
+}
+.object-listing-line {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 2px 4px;
+  cursor: default;
+  white-space: nowrap;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}
+.object-listing-line:focus {
+  outline: 2px solid var(--color-outline);
+}
+.compose-area {
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+  height: 150px;
+}

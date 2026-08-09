@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>OpenAI Mock Frontend</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        max-width: 1000px;
+        margin: 24px auto;
+      }
+
+      pre {
+        background: #f6f6f6;
+        padding: 12px;
+        overflow: auto;
+      }
+
+      .request {
+        border: 1px solid #999;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px 0;
+      }
+
+      textarea {
+        width: 100%;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>OpenAI Mock Frontend</h1>
+
+    <p>
+      <button onclick="refresh()">Refresh</button>
+    </p>
+
+    <div id="requests"></div>
+
+    <script>
+      const API_BASE = "";
+
+      async function refresh() {
+        const container = document.getElementById("requests");
+
+        try {
+          const res = await fetch(`${API_BASE}/__mock/api/requests`);
+          const data = await res.json();
+
+          if (!data.requests || data.requests.length === 0) {
+            container.innerHTML = "<p>No pending requests.</p>";
+            return;
+          }
+
+          container.innerHTML = "";
+
+          for (const request of data.requests) {
+            const div = document.createElement("div");
+            div.className = "request";
+
+            const title = document.createElement("h2");
+            title.textContent = `Request ${request.id}`;
+
+            const meta = document.createElement("p");
+            meta.textContent = `${request.path} | received ${request.received_at} | stream=${request.stream}`;
+
+            const pre = document.createElement("pre");
+            pre.textContent = JSON.stringify(request.body, null, 2);
+
+            const textarea = document.createElement("textarea");
+            textarea.rows = 10;
+            textarea.placeholder =
+              "Plain text, or full JSON response object";
+
+            const button = document.createElement("button");
+            button.textContent = "Send response";
+
+            button.onclick = async () => {
+              let responseValue = textarea.value;
+
+              // Try to parse JSON. If it parses, send it as JSON object.
+              // Otherwise send it as plain text.
+              try {
+                responseValue = JSON.parse(responseValue);
+              } catch {
+                // Keep as string.
+              }
+
+              const respondRes = await fetch(`${API_BASE}/__mock/api/respond`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  request_id: request.id,
+                  response: responseValue,
+                }),
+              });
+
+              if (!respondRes.ok) {
+                const err = await respondRes.json().catch(() => ({}));
+                alert(`Error: ${JSON.stringify(err)}`);
+                return;
+              }
+
+              refresh();
+            };
+
+            div.appendChild(title);
+            div.appendChild(meta);
+            div.appendChild(pre);
+            div.appendChild(textarea);
+            div.appendChild(button);
+
+            container.appendChild(div);
+          }
+        } catch (err) {
+          container.innerHTML = `<p>Error: ${String(err)}</p>`;
+        }
+      }
+
+      // Poll every 2 seconds.
+      setInterval(refresh, 2000);
+
+      refresh();
+    </script>
+  </body>
+</html>
