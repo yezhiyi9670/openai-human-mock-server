@@ -105,6 +105,7 @@ export default {
             '/input/*/content/*/',
             '/tools/',
             '/tools/*/',
+            '/tools/*/function',
           ]"
           :data="body"
         />
@@ -121,6 +122,16 @@ export default {
       <button @click="canRespond && $emit('respond', responseBody)" :disabled="!canRespond">Respond this</button>
       <p></p>
       <ListingFocusWrap>
+        <ObjectListing
+          :name="'tool_call_hint'"
+          :pathPrefix="'/'"
+          :data="
+            'To repond with native tool call, write #<tool_name>(<arguments>) as a single line, without leading or trailing whitespaces.\\n' +
+            'Arguments can be supplied in <key>:<value> format, example: #func(arg1: 3, arg2: \\'test\\'). In this case, a JSON arguments payload is sent.\\n' +
+            'Arguments can also be a single string, example: #func(\\'Hello, world!\\'). In this case, a freeform plain-text arguments payload is sent.\\n' +
+            'Tool call lines will be stripped after being parsed, so they will not appear in the final response text.'
+          "
+        />
         <ObjectListing
           :name="'parsing_errors'"
           :pathPrefix="'/'"

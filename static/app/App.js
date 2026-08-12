@@ -121,6 +121,7 @@ export default {
       <template v-for="request in requests">
         <div class="request-view-wrap" :style="{ display: request == selectedRequest ? 'block': 'none' }">
           <RequestView
+            :key="getRequestId(request)"
             :request="request"
             @reject="rejectRequest(getRequestId(request))"
             @respond="body => respondRequest(getRequestId(request), body)"
