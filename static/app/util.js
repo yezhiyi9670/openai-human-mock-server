@@ -127,7 +127,7 @@ export async function parseRespondText(text) {
   for(const item of matches) {
     const fn_args = item[2]
     if(fn_args in callParseMap) {
-      return
+      continue
     }
     const args_parse_payload_dict = `
       JSON.parse(JSON.stringify({${fn_args}}))
