@@ -117,6 +117,7 @@ export function getFocusableElements(container) {
   });
 }
 
+const sandbox = new IframeSandbox()
 export async function parseRespondText(text) {
   const fncall_regexp = /^#([A-Za-z0-9_\-$]+)\((.*?)\)(\n|$)/mg
 
@@ -136,16 +137,17 @@ export async function parseRespondText(text) {
       JSON.parse(JSON.stringify(${fn_args}))
     `
     let args_parse_result = null
+    sandbox.forceReset()
     try {
       args_parse_result = {
         success: true, 
-        data: await window.WorkerSandbox.evalAsync(args_parse_payload_dict, null, 1000)
+        data: await sandbox.eval(args_parse_payload_dict, { timeout: 1000 })
       }
     } catch(err) {
       try {
         args_parse_result = {
           success: true, 
-          data: await window.WorkerSandbox.evalAsync(args_parse_payload_value, null, 1000)
+          data: await sandbox.eval(args_parse_payload_value, { timeout: 1000 })
         }
       } catch(err) {
         args_parse_result = {
