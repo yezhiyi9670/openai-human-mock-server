@@ -141,13 +141,13 @@ export async function parseRespondText(text) {
     try {
       args_parse_result = {
         success: true, 
-        data: await sandbox.eval(args_parse_payload_dict, { timeout: 1000 })
+        data: await sandbox.eval(args_parse_payload_dict, { timeoutMs: 3000 })
       }
     } catch(err) {
       try {
         args_parse_result = {
           success: true, 
-          data: await sandbox.eval(args_parse_payload_value, { timeout: 1000 })
+          data: await sandbox.eval(args_parse_payload_value, { timeoutMs: 3000 })
         }
       } catch(err) {
         args_parse_result = {
