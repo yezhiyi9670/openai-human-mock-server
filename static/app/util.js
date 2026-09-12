@@ -131,10 +131,10 @@ export async function parseRespondText(text) {
       continue
     }
     const args_parse_payload_dict = `
-      JSON.parse(JSON.stringify({${fn_args}}))
+      ({${fn_args}})
     `
     const args_parse_payload_value = `
-      JSON.parse(JSON.stringify(${fn_args}))
+      (${fn_args})
     `
     let args_parse_result = null
     sandbox.forceReset()
